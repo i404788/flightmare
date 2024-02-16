@@ -158,7 +158,7 @@ bool QuadrotorDynamics::setMotortauInv(const Scalar tau_inv) {
 }
 
 bool QuadrotorDynamics::updateParams(const json& params) {
-  if (params["quadrotor_dynamics"]) {
+  if (params.contains("quadrotor_dynamics")) {
     // load parameters from a yaml configuration file
     mass_ = params["quadrotor_dynamics"]["mass"];
     arm_l_ = params["quadrotor_dynamics"]["arm_l"];

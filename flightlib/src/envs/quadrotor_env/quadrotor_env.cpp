@@ -3,8 +3,7 @@
 namespace flightlib {
 
 QuadrotorEnv::QuadrotorEnv()
-  : QuadrotorEnv(getenv("FLIGHTMARE_PATH") +
-                 std::string("/flightlib/configs/quadrotor_env.yaml")) {}
+  : QuadrotorEnv(std::string("./quadrotor_env.json")) {}
 
 QuadrotorEnv::QuadrotorEnv(const std::string &cfg_path)
   : EnvBase(),
@@ -149,15 +148,15 @@ bool QuadrotorEnv::isTerminalState(Scalar &reward) {
   return false;
 }
 
-bool QuadrotorEnv::loadParam(const json &cfg) {
-  if (cfg["quadrotor_env"]) {
+bool QuadrotorEnv::loadParam(json &cfg) {
+  if (cfg.contains("quadrotor_env")) {
     sim_dt_ = cfg["quadrotor_env"]["sim_dt"];
     max_t_ = cfg["quadrotor_env"]["max_t"];
   } else {
     return false;
   }
 
-  if (cfg["rl"]) {
+  if (cfg.contains("rl")) {
     // load reinforcement learning related parameters
     pos_coeff_ = cfg["rl"]["pos_coeff"];
     ori_coeff_ = cfg["rl"]["ori_coeff"];

@@ -6,6 +6,7 @@
 import yaml
 from pathlib import Path
 
+import json
 import os
 import math
 import argparse
@@ -47,6 +48,32 @@ def parser():
     return parser
 
 
+default_drone_cfg = yaml.safe_load("""
+quadrotor_env:
+   camera: no
+   sim_dt: 0.02 
+   max_t: 5.0
+   add_camera: yes
+
+quadrotor_dynamics:
+  mass: 0.73
+  arm_l: 0.17
+  motor_omega_min: 150.0 # motor rpm min
+  motor_omega_max: 3000.0 # motor rpm max
+  motor_tau: 0.0001 # motor step response
+  thrust_map: [1.3298253500372892e-06, 0.0038360810526746033, -1.7689986848125325]
+  kappa: 0.016 # rotor drag coeff
+  omega_max: [6.0, 6.0, 6.0]  # body rate constraint (x, y, z) 
+
+rl:
+  pos_coeff: -0.002        # reward coefficient for position 
+  ori_coeff: -0.002        # reward coefficient for orientation
+  lin_vel_coeff: -0.0002   # reward coefficient for linear velocity
+  ang_vel_coeff: -0.0002   # reward coefficient for angular velocity
+  act_coeff: -0.0002  # reward coefficient for control actions
+""")
+
+
 def main():
     args = parser().parse_args()
     cfg = yaml.safe_load(open(os.environ["FLIGHTMARE_PATH"] +
@@ -56,15 +83,17 @@ def main():
         cfg["env"]["num_threads"] = 1
 
     if args.render:
-        cfg["env"]["render"] = "yes"
+        cfg["env"]["render"] = True
     else:
-        cfg["env"]["render"] = "no"
+        cfg["env"]["render"] = False
 
     print(cfg)
-    cfg_yml = yaml.safe_dump(cfg)
-    Path('./quadenv.yaml').write_text(cfg_yml)
-    print(cfg_yml)
-    env = wrapper.FlightEnvVec(QuadrotorEnv_v1('./quadenv.yaml', True))
+    cfg = json.dumps(cfg)
+    Path('./quadenv.json').write_text(cfg)
+    print(default_drone_cfg)
+    Path('./quadrotor_env.json').write_text(json.dumps(default_drone_cfg))
+    env = QuadrotorEnv_v1('./quadenv.json')
+    env = wrapper.FlightEnvVec(env)
 
     # set random seed
     print(dir(env))

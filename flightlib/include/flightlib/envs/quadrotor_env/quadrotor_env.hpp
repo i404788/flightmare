@@ -52,7 +52,7 @@ class QuadrotorEnv final : public EnvBase {
   Scalar step(const Ref<Vector<>> act, Ref<Vector<>> obs) override;
 
   // - public set functions
-  bool loadParam(const json& cfg);
+  bool loadParam(json& cfg);
 
   // - public get functions
   bool getObs(Ref<Vector<>> obs) override;

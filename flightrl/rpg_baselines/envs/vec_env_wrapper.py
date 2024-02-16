@@ -19,7 +19,7 @@ class FlightEnvVec:
         self._observation = np.zeros([self.num_envs, self.num_obs],
                                      dtype=np.float32)
         self._reward = np.zeros(self.num_envs, dtype=np.float32)
-        self._done = np.zeros((self.num_envs), dtype=np.bool)
+        self._done = np.zeros((self.num_envs), dtype=bool)
         self._extraInfoNames = self.wrapper.getExtraInfoNames()
         self._extraInfo = np.zeros([self.num_envs,
                                     len(self._extraInfoNames)], dtype=np.float32)
@@ -34,7 +34,7 @@ class FlightEnvVec:
         self.wrapper.step(action, self._observation,
                           self._reward, self._done, self._extraInfo)
 
-        if len(self._extraInfoNames) is not 0:
+        if len(self._extraInfoNames) != 0:
             info = [{'extra_info': {
                 self._extraInfoNames[j]: self._extraInfo[i, j] for j in range(0, len(self._extraInfoNames))
             }} for i in range(self.num_envs)]

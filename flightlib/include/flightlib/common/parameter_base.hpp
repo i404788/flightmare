@@ -1,6 +1,6 @@
 #pragma once
 
-#include <nlohmann/json.hpp>
+#include "flightlib/json/json.hpp"
 using json = nlohmann::json;
 
 namespace flightlib {
