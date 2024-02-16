@@ -157,25 +157,25 @@ bool QuadrotorDynamics::setMotortauInv(const Scalar tau_inv) {
   return true;
 }
 
-bool QuadrotorDynamics::updateParams(const YAML::Node& params) {
+bool QuadrotorDynamics::updateParams(const json& params) {
   if (params["quadrotor_dynamics"]) {
     // load parameters from a yaml configuration file
-    mass_ = params["quadrotor_dynamics"]["mass"].as<Scalar>();
-    arm_l_ = params["quadrotor_dynamics"]["arm_l"].as<Scalar>();
+    mass_ = params["quadrotor_dynamics"]["mass"];
+    arm_l_ = params["quadrotor_dynamics"]["arm_l"];
     motor_omega_min_ =
-      params["quadrotor_dynamics"]["motor_omega_min"].as<Scalar>();
+      params["quadrotor_dynamics"]["motor_omega_min"];
     motor_omega_max_ =
-      params["quadrotor_dynamics"]["motor_omega_max"].as<Scalar>();
+      params["quadrotor_dynamics"]["motor_omega_max"];
     motor_tau_inv_ =
-      (1.0 / params["quadrotor_dynamics"]["motor_tau"].as<Scalar>());
+      (1.0 / params["quadrotor_dynamics"]["motor_tau"].template get<Scalar>());
     std::vector<Scalar> thrust_map;
     thrust_map =
-      params["quadrotor_dynamics"]["thrust_map"].as<std::vector<Scalar>>();
+      params["quadrotor_dynamics"]["thrust_map"].template get<std::vector<Scalar>>();
     thrust_map_ = Map<Vector<3>>(thrust_map.data());
-    kappa_ = params["quadrotor_dynamics"]["kappa"].as<Scalar>();
+    kappa_ = params["quadrotor_dynamics"]["kappa"];
     std::vector<Scalar> omega_max;
     omega_max =
-      params["quadrotor_dynamics"]["omega_max"].as<std::vector<Scalar>>();
+      params["quadrotor_dynamics"]["omega_max"].template get<std::vector<Scalar>>();
     omega_max_ = Map<Vector<3>>(omega_max.data());
 
     // update relevant variables

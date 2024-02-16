@@ -10,11 +10,9 @@
 #include <unordered_map>
 #include <vector>
 
-// yaml
-#include <yaml-cpp/yaml.h>
-
 // alpha gym types
 #include "flightlib/common/types.hpp"
+#include "flightlib/json/json.hpp"
 
 namespace flightlib {
 

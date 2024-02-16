@@ -1,6 +1,5 @@
 #pragma once
 
-#include <yaml-cpp/yaml.h>
 #include <deque>
 #include <functional>
 #include <memory>
@@ -12,6 +11,9 @@
 #include "flightlib/common/logger.hpp"
 #include "flightlib/common/types.hpp"
 #include "flightlib/sensors/sensor_base.hpp"
+
+#include "flightlib/json/json.hpp"
+using json = nlohmann::json;
 
 namespace flightlib {
 

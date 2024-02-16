@@ -16,6 +16,10 @@
 #include "flightlib/envs/env_base.hpp"
 #include "flightlib/envs/quadrotor_env/quadrotor_env.hpp"
 
+#include "flightlib/json/json.hpp"
+using json = nlohmann::json;
+
+
 namespace flightlib {
 
 template<typename EnvBase>
@@ -23,7 +27,7 @@ class VecEnv {
  public:
   VecEnv();
   VecEnv(const std::string& cfgs, const bool from_file = true);
-  VecEnv(const YAML::Node& cfgs_node);
+  VecEnv(const json& cfgs_node);
   ~VecEnv();
 
   // - public OpenAI-gym style functions for vectorized environment
@@ -95,7 +99,7 @@ class VecEnv {
   Matrix<> obs_dummy_;
 
   // yaml configurations
-  YAML::Node cfg_;
+  json cfg_;
 };
 
 }  // namespace flightlib

@@ -1,9 +1,8 @@
 import numpy as np
 from gym import spaces
-from stable_baselines.common.vec_env import VecEnv
 
 
-class FlightEnvVec(VecEnv):
+class FlightEnvVec:
     #
     def __init__(self, impl):
         self.wrapper = impl

@@ -40,16 +40,17 @@ else()
   set(EIGEN_INCLUDE_DIR ${EIGEN_ALTERNATIVE})
 endif()
 
-message(STATUS "Eigen3 include dir: ${EIGEN3_INCLUDE_DIR}")
+message(STATUS "Eigen3 include dir: ${EIGEN3_INCLUDE_DIR} OR ${EIGEN_INCLUDE_DIR}")
 
 # Including dependencies 
 include(cmake/pybind11.cmake)
-include(cmake/yaml.cmake)
+# include(cmake/yaml.cmake)
 
 # Including dependencies 
 find_package(OpenCV REQUIRED)
 include_directories(${OpenCV_INCLUDE_DIRS})
 find_package(OpenMP REQUIRED)
+# find_package(nlohmann_json 3.10.5 REQUIRED)
 
 if(ENABLE_BLAS)
   set(BLA_VENDOR "Generic")
@@ -86,8 +87,12 @@ message(STATUS "======> Setup Compilation")
 add_definitions(-DEIGEN_STACK_ALLOCATION_LIMIT=1048576)
 include_directories(${EIGEN_INCLUDE_DIR} "tests")
 include_directories(${OpenCV_INCLUDE_DIRS})
+include_directories("${EIGEN3_INCLUDE_DIR}")
+include_directories("${EIGEN3_INCLUDE_DIR}/..")
+# include_directories(/usr/include/x86_64-linux-gnu/)
 
 # Set default build type
+# set(CMAKE_BUILD_TYPE Debug)
 if (NOT EXISTS ${CMAKE_BINARY_DIR}/CMakeCache.txt)
   if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Release" CACHE STRING "" FORCE)
@@ -203,9 +208,11 @@ else()
   add_library(${PROJECT_NAME} ${FLIGHTLIB_SOURCES})
   target_link_libraries(${PROJECT_NAME} PRIVATE
     ${OpenCV_LIBRARIES}
-    yaml-cpp
+    # nlohmann_json::nlohmann_json
     zmq
     zmqpp
+    -static-libgcc 
+    -static-libstdc++
     stdc++fs)
   set(LIBRARY_NAME ${PROJECT_NAME})
   set_target_properties(${PROJECT_NAME} PROPERTIES POSITION_INDEPENDENT_CODE TRUE)

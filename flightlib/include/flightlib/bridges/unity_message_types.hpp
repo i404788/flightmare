@@ -15,7 +15,6 @@
 // flightlib
 #include "flightlib/common/types.hpp"
 #include "flightlib/json/json.hpp"
-
 using json = nlohmann::json;
 
 namespace flightlib {

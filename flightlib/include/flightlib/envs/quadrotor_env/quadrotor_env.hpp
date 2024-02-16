@@ -5,8 +5,8 @@
 #include <cmath>
 #include <iostream>
 
-// yaml cpp
-#include <yaml-cpp/yaml.h>
+#include "flightlib/json/json.hpp"
+using json = nlohmann::json;
 
 // flightlib
 #include "flightlib/bridges/unity_bridge.hpp"
@@ -52,7 +52,7 @@ class QuadrotorEnv final : public EnvBase {
   Scalar step(const Ref<Vector<>> act, Ref<Vector<>> obs) override;
 
   // - public set functions
-  bool loadParam(const YAML::Node &cfg);
+  bool loadParam(const json& cfg);
 
   // - public get functions
   bool getObs(Ref<Vector<>> obs) override;
@@ -89,7 +89,7 @@ class QuadrotorEnv final : public EnvBase {
   Vector<quadenv::kNObs> obs_mean_ = Vector<quadenv::kNObs>::Zero();
   Vector<quadenv::kNObs> obs_std_ = Vector<quadenv::kNObs>::Ones();
 
-  YAML::Node cfg_;
+  json cfg_;
   Matrix<3, 2> world_box_;
 };
 

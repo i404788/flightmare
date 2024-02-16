@@ -8,7 +8,7 @@ VecEnv<EnvBase>::VecEnv()
            std::string("/flightlib/configs/vec_env.yaml")) {}
 
 template<typename EnvBase>
-VecEnv<EnvBase>::VecEnv(const YAML::Node& cfg_node) : cfg_(cfg_node) {
+VecEnv<EnvBase>::VecEnv(const json& cfg_node) : cfg_(cfg_node) {
   // initialization
   init();
 }
@@ -16,12 +16,14 @@ VecEnv<EnvBase>::VecEnv(const YAML::Node& cfg_node) : cfg_(cfg_node) {
 template<typename EnvBase>
 VecEnv<EnvBase>::VecEnv(const std::string& cfgs, const bool from_file) {
   // load environment configuration
+    
   if (from_file) {
     // load directly from a yaml file
-    cfg_ = YAML::LoadFile(cfgs);
+    std::ifstream f(cfgs);
+    cfg_ = json::parse(f);
   } else {
     // load from a string or dictionary
-    cfg_ = YAML::Load(cfgs);
+    cfg_ = json::parse(cfgs);
   }
   // initialization
   init();
@@ -30,13 +32,15 @@ VecEnv<EnvBase>::VecEnv(const std::string& cfgs, const bool from_file) {
 template<typename EnvBase>
 void VecEnv<EnvBase>::init(void) {
   //
-  unity_render_ = cfg_["env"]["render"].as<bool>();
-  seed_ = cfg_["env"]["seed"].as<int>();
-  num_envs_ = cfg_["env"]["num_envs"].as<int>();
-  scene_id_ = cfg_["env"]["scene_id"].as<SceneID>();
+  printf("Starting init\n");
+  unity_render_ = cfg_["env"]["render"];
+  seed_ = cfg_["env"]["seed"];
+  num_envs_ = cfg_["env"]["num_envs"];
+  scene_id_ = cfg_["env"]["scene_id"];
+  printf("Finished loading vars\n");
 
   // set threads
-  omp_set_num_threads(cfg_["env"]["num_threads"].as<int>());
+  omp_set_num_threads(cfg_["env"]["num_threads"]);
 
   // create & setup environments
   const bool render = false;

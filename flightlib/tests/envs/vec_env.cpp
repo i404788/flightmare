@@ -2,7 +2,6 @@
 #include "flightlib/envs/quadrotor_env/quadrotor_env.hpp"
 
 #include <gtest/gtest.h>
-#include <yaml-cpp/yaml.h>
 #include <fstream>
 #include <iostream>
 #include <vector>
@@ -17,7 +16,8 @@ TEST(VecEnv, Constructor) {
 
   QuadrotorEnv env(config_path);
   // load configurations
-  YAML::Node cfg = YAML::LoadFile(config_path);
+  std::ifstream f(config_path);
+  json cfg = json::parse(f);
 
   // constructor 0
   VecEnv<QuadrotorEnv> vec_env_v0(
@@ -38,10 +38,10 @@ TEST(VecEnv, Constructor) {
   EXPECT_EQ(vec_obs_dim, obs_dim);
   EXPECT_EQ(vec_act_dim, act_dim);
 
-  const int seed = cfg["env"]["seed"].as<int>();
-  const size_t scene_id = cfg["env"]["scene_id"].as<size_t>();
-  const int num_envs = cfg["env"]["num_envs"].as<int>();
-  const bool render = cfg["env"]["render"].as<bool>();
+  const int seed = cfg["env"]["seed"];
+  const size_t scene_id = cfg["env"]["scene_id"];
+  const int num_envs = cfg["env"]["num_envs"];
+  const bool render = cfg["env"]["render"];
 
   const int vec_seed_v0 = vec_env_v0.getSeed();
   const size_t vec_scene_id_v0 = vec_env_v0.getSceneID();

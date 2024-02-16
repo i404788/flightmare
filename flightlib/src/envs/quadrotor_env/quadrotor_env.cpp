@@ -17,7 +17,8 @@ QuadrotorEnv::QuadrotorEnv(const std::string &cfg_path)
                  0.0, 0.0, 0.0, 0.0, 0.0)
                   .finished()) {
   // load configuration file
-  YAML::Node cfg_ = YAML::LoadFile(cfg_path);
+  std::ifstream f(cfg_path);
+  cfg_ = json::parse(f);
 
   quadrotor_ptr_ = std::make_shared<Quadrotor>();
   // update dynamics
@@ -148,21 +149,21 @@ bool QuadrotorEnv::isTerminalState(Scalar &reward) {
   return false;
 }
 
-bool QuadrotorEnv::loadParam(const YAML::Node &cfg) {
+bool QuadrotorEnv::loadParam(const json &cfg) {
   if (cfg["quadrotor_env"]) {
-    sim_dt_ = cfg["quadrotor_env"]["sim_dt"].as<Scalar>();
-    max_t_ = cfg["quadrotor_env"]["max_t"].as<Scalar>();
+    sim_dt_ = cfg["quadrotor_env"]["sim_dt"];
+    max_t_ = cfg["quadrotor_env"]["max_t"];
   } else {
     return false;
   }
 
   if (cfg["rl"]) {
     // load reinforcement learning related parameters
-    pos_coeff_ = cfg["rl"]["pos_coeff"].as<Scalar>();
-    ori_coeff_ = cfg["rl"]["ori_coeff"].as<Scalar>();
-    lin_vel_coeff_ = cfg["rl"]["lin_vel_coeff"].as<Scalar>();
-    ang_vel_coeff_ = cfg["rl"]["ang_vel_coeff"].as<Scalar>();
-    act_coeff_ = cfg["rl"]["act_coeff"].as<Scalar>();
+    pos_coeff_ = cfg["rl"]["pos_coeff"];
+    ori_coeff_ = cfg["rl"]["ori_coeff"];
+    lin_vel_coeff_ = cfg["rl"]["lin_vel_coeff"];
+    ang_vel_coeff_ = cfg["rl"]["ang_vel_coeff"];
+    act_coeff_ = cfg["rl"]["act_coeff"];
   } else {
     return false;
   }

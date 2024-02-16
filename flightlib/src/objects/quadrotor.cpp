@@ -7,7 +7,8 @@ Quadrotor::Quadrotor(const std::string &cfg_path)
     size_(1.0, 1.0, 1.0),
     collision_(false) {
   //
-  YAML::Node cfg = YAML::LoadFile(cfg_path);
+  std::ifstream f(cfg_path);
+  json cfg = json::parse(f);
 
   // create quadrotor dynamics and update the parameters
   dynamics_.updateParams(cfg);

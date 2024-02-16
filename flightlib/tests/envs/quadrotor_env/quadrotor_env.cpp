@@ -2,7 +2,6 @@
 #include "flightlib/common/logger.hpp"
 
 #include <gtest/gtest.h>
-#include <yaml-cpp/yaml.h>
 #include <fstream>
 #include <iostream>
 
@@ -32,12 +31,14 @@ TEST(QuadrotorEnv, Constructor) {
   EXPECT_EQ(act_dim, ACT_DIM);
 
   // load parameters via the yaml file
-  YAML::Node cfg = YAML::LoadFile(config_path);
+  std::ifstream f(config_path);
+  json cfg = json::parse(f);
+
   QuadrotorEnv env1;
   EXPECT_TRUE(env1.loadParam(cfg));
 
   // evaluate parameters
-  Scalar expect_sim_dt = cfg["quadrotor_env"]["sim_dt"].as<Scalar>();
+  Scalar expect_sim_dt = cfg["quadrotor_env"]["sim_dt"];
 
   const int obs_dim1 = env1.getObsDim();
   const int act_dim1 = env1.getActDim();

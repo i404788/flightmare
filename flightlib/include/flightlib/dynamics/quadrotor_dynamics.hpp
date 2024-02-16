@@ -1,6 +1,5 @@
 #pragma once
 
-#include <yaml-cpp/yaml.h>
 #include <iostream>
 #include <memory>
 
@@ -8,6 +7,9 @@
 #include "flightlib/common/math.hpp"
 #include "flightlib/common/quad_state.hpp"
 #include "flightlib/dynamics/dynamics_base.hpp"
+
+#include "flightlib/json/json.hpp"
+using json = nlohmann::json;
 
 namespace flightlib {
 
@@ -27,7 +29,7 @@ class QuadrotorDynamics : DynamicsBase {
 
   // help functions
   bool valid() const;
-  bool updateParams(const YAML::Node& params);
+  bool updateParams(const json& params);
 
   // Helpers to apply limits.
   Vector<4> clampThrust(const Vector<4> thrusts) const;

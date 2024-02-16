@@ -98,11 +98,13 @@ TEST(QuadrotorDynamics, LoadParams) {
   std::string cfg_path = getenv("FLIGHTMARE_PATH") +
                          std::string("/flightlib/configs/quadrotor_env.yaml");
 
-  YAML::Node cfg = YAML::LoadFile(cfg_path);
-  const Scalar mass = cfg["quadrotor_dynamics"]["mass"].as<Scalar>();
-  const Scalar arm_l = cfg["quadrotor_dynamics"]["arm_l"].as<Scalar>();
+  std::ifstream f(cfg_path);
+  json cfg = json::parse(f);
+
+  const Scalar mass = cfg["quadrotor_dynamics"]["mass"];
+  const Scalar arm_l = cfg["quadrotor_dynamics"]["arm_l"];
   const Scalar motor_tau_inv =
-    (1.0 / cfg["quadrotor_dynamics"]["motor_tau"].as<Scalar>());
+    (1.0 / (Scalar)cfg["quadrotor_dynamics"]["motor_tau"]);
 
   EXPECT_TRUE(quad.updateParams(cfg));
   EXPECT_EQ(mass, quad.getMass());
